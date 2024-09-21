@@ -6,9 +6,9 @@ public class Book {
     private int pages;
     private String author;
     private String publisher;
-    private Integer isbn;
+    private String isbn;
 
-    public Book(String title, String genre, int pages, String author, String publisher, Integer isbn)
+    public Book(String title, String genre, int pages, String author, String publisher, String isbn)
     {
         this.title = title;
         this.genre = genre;
@@ -43,7 +43,7 @@ public class Book {
         return this.publisher;
     }
 
-    public Integer getISBN()
+    public String getISBN()
     {
         return this.isbn;
     }
@@ -63,7 +63,7 @@ public class Book {
 
     public String toString()
     {
-        return ("\nTitle: "+this.title+"\nGenre: "+this.genre+"\nPages: "+this.pages+"\nAuthor: "+this.author+"\nPublisher: "+this.publisher+"\nInternational Standard Book Number(ISBN): "+this.isbn+"\n");
+        return ("\nTitle: "+this.title+",\nGenre: "+this.genre+",\nPages: "+this.pages+",\nAuthor: "+this.author+",\nPublisher: "+this.publisher+",\nInternational Standard Book Number(ISBN): "+this.isbn+"\n");
     }
 
 }

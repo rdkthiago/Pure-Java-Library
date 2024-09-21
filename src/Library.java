@@ -1,25 +1,25 @@
 import java.util.HashMap;
 
 public class Library {
-    private HashMap<Integer, Book> books;
+    private HashMap<String, Book> books;
 
     public Library()
     {
-        this.books = new HashMap<Integer, Book>();
+        this.books = new HashMap<String, Book>();
     }
 
-    public void addBook(Integer isbn,Book book)
+    public void addBook(String isbn,Book book)
     {
         books.put(isbn, book);
     }
 
-    public void removeBook(Integer isbn)
+    public void removeBook(String isbn)
     {
             books.remove(isbn);
         
     }
 
-    public Book getBook(Integer isbn)
+    public Book getBook(String isbn)
     {
         if(this.books.get(isbn) != null){
             return this.books.get(isbn);
@@ -28,7 +28,7 @@ public class Library {
         return null;
     }
 
-    public HashMap<Integer, Book> getBooks() {
+    public HashMap<String, Book> getBooks() {
         return books;
     }
 

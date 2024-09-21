@@ -22,12 +22,13 @@ public class User {
         
     }
 
-    public Book returnBook(String title)
+    public Book returnBook(String isbn)
     {
         for (int i = 0; i < borrowedBooks.size(); i++) {
-            if(borrowedBooks.get(i).getTitle().equals(title)){
+            if(borrowedBooks.get(i).getISBN().equals(isbn)){
+                Book temporaryBook = borrowedBooks.get(i);
                 borrowedBooks.remove(i);
-                return borrowedBooks.get(i);
+                return temporaryBook;
             }
         }
         return null;

@@ -43,7 +43,7 @@ public class App {
                         System.out.println("Invalid ISBN. Please enter a valid number:");
                         sc.next();
                     }
-                    Integer ISBN = sc.nextInt();                    
+                    String ISBN = sc.next();                    
                     Book b = new Book(title, genre, pages, author, pub, ISBN);
                     lib.addBook(ISBN, b);
                     writeFile(b.toString(), libBooks);
@@ -51,7 +51,7 @@ public class App {
                 case 2:
                     
                     System.out.println("Write the ISBN (International Standard Book Number) of the book:");
-                    lib.removeBook(sc.nextInt());
+                    lib.removeBook(sc.next());
                     updateLibraryFile();
                     break;
                 case 3:
@@ -72,8 +72,8 @@ public class App {
 
             switch (opc) {
                 case 1:
-                    System.out.println("Choose a Book by its ISBN:"+lib.allBooks());
-                    Book b = lib.getBook(sc.nextInt());
+                    System.out.println("Choose a Book by its ISBN:\n"+lib.allBooks());
+                    Book b = lib.getBook(sc.next());
                     if(b != null)
                     {
                         if(user.borrowBook(b)) {
@@ -92,9 +92,10 @@ public class App {
                     break;
             
                 case 2:
-                    System.out.println("Which book are you returning?"+user.borrowedBooksList()+" Enter its title: ");
-                    Book returned = user.returnBook(sc.next());
-                    sc.nextLine();
+                    System.out.println("Which book are you returning?");
+                    readFile(userBooks);
+                    System.out.println("\nEnter it's ISBN: ");
+                    Book returned = user.returnBook(sc.nextLine());
                     if(returned != null){
                         lib.addBook(returned.getISBN(), returned);
                         updateUserBooksFile();
@@ -106,7 +107,7 @@ public class App {
                     readFile(userBooks);
                     break;
                 default:
-                    System.out.println("Invalid Option! Try again");
+                    System.out.println("returning...");
                     break;
                 
             }
@@ -171,6 +172,44 @@ public class App {
         writer.write(user.borrowedBooksList());
         writer.close();
     }
+    
+
+    public static void loadLibraryBooks() throws IOException {
+        Scanner reader = new Scanner(libBooks);
+        while (reader.hasNextLine()) {
+            String[] bookData = reader.nextLine().split(",");  
+            if (bookData.length == 6) {
+                String title = bookData[0];
+                String genre = bookData[1];
+                int pages = Integer.parseInt(bookData[2]);
+                String author = bookData[3];
+                String publisher = bookData[4];
+                String isbn = bookData[5];
+                Book book = new Book(title, genre, pages, author, publisher, isbn);
+                lib.addBook(isbn, book);
+            }
+        }
+        reader.close();
+    }
+
+    public static void loadUserBooks() throws IOException {
+        Scanner reader = new Scanner(userBooks);
+        while (reader.hasNextLine()) {
+            String[] bookData = reader.nextLine().split(",");  
+            if (bookData.length == 6) {
+                String title = bookData[0];
+                String genre = bookData[1];
+                int pages = Integer.parseInt(bookData[2]);
+                String author = bookData[3];
+                String publisher = bookData[4];
+                String isbn = bookData[5];
+                Book book = new Book(title, genre, pages, author, publisher, isbn);
+                user.borrowBook(book);  
+            }
+        }
+        reader.close();
+    }
+    
     
     public static void main(String[] args) throws Exception {
         menu();
