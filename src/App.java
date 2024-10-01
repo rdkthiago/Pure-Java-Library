@@ -13,7 +13,6 @@ public class App {
     
     private static void libMenu() throws IOException
     {
-
         int opc = 0;
         do{
             System.out.println("[1] Add a book [2] Remove a book [3] Show all books [-1] Back");
@@ -55,7 +54,7 @@ public class App {
                     updateLibraryFile();
                     break;
                 case 3:
-                    readFile(libBooks);
+                    System.out.println(lib.allBooks());
                     break;
             }
         }while(opc != -1);
@@ -81,6 +80,7 @@ public class App {
                             writeFile(b.toString(), userBooks);
                             System.out.println("Borrowed with success!");
                             updateLibraryFile();
+                            
                         }
                         else
                             System.out.println("Failed to Borrow!");
@@ -99,6 +99,7 @@ public class App {
                     if(returned != null){
                         lib.addBook(returned.getISBN(), returned);
                         updateUserBooksFile();
+                        updateLibraryFile();
                     }        
                     else
                         System.out.println("Cannot return! Invalid Input.");
@@ -176,42 +177,81 @@ public class App {
 
     public static void loadLibraryBooks() throws IOException {
         Scanner reader = new Scanner(libBooks);
+        
         while (reader.hasNextLine()) {
-            String[] bookData = reader.nextLine().split(",");  
-            if (bookData.length == 6) {
-                String title = bookData[0];
-                String genre = bookData[1];
-                int pages = Integer.parseInt(bookData[2]);
-                String author = bookData[3];
-                String publisher = bookData[4];
-                String isbn = bookData[5];
-                Book book = new Book(title, genre, pages, author, publisher, isbn);
-                lib.addBook(isbn, book);
+            // Leia o título
+            String titleLine = reader.nextLine();
+            String title = titleLine.split(": ")[1].trim(); // Pega o valor após "Title: "
+            
+            // Leia o gênero
+            String genreLine = reader.nextLine();
+            String genre = genreLine.split(": ")[1].trim(); // Pega o valor após "Genre: "
+            
+            // Leia o número de páginas
+            String pagesLine = reader.nextLine();
+            int pages = Integer.parseInt(pagesLine.split(": ")[1].replace(",", "").trim()); // Remove a vírgula e espaços
+            
+            // Leia o autor
+            String authorLine = reader.nextLine();
+            String author = authorLine.split(": ")[1].trim(); // Pega o valor após "Author: "
+            
+            // Leia a editora
+            String publisherLine = reader.nextLine();
+            String publisher = publisherLine.split(": ")[1].trim(); // Pega o valor após "Publisher: "
+            
+            // Leia o ISBN
+            String isbnLine = reader.nextLine();
+            String isbn = isbnLine.split(": ")[1].trim(); // Pega o valor após "ISBN: "
+            
+            // Adiciona o livro à biblioteca
+            Book book = new Book(title, genre, pages, author, publisher, isbn);
+            lib.addBook(isbn, book);
+    
+            // Avança para a próxima linha vazia (ou seja, entre dois livros)
+            if (reader.hasNextLine()) {
+                reader.nextLine(); // Pula a linha vazia
             }
         }
+        
         reader.close();
     }
+     
 
     public static void loadUserBooks() throws IOException {
         Scanner reader = new Scanner(userBooks);
+        
         while (reader.hasNextLine()) {
             String[] bookData = reader.nextLine().split(",");  
             if (bookData.length == 6) {
-                String title = bookData[0];
-                String genre = bookData[1];
-                int pages = Integer.parseInt(bookData[2]);
-                String author = bookData[3];
-                String publisher = bookData[4];
-                String isbn = bookData[5];
+                String title = bookData[0].split(": ")[1].trim(); // Pega o valor após "Title: "
+                String genre = bookData[1].split(": ")[1].trim(); // Pega o valor após "Genre: "
+                
+                // Remove a vírgula e converte para int
+                int pages = Integer.parseInt(bookData[2].split(": ")[1].replace(",", "").trim()); // Remove a vírgula e espaços
+                
+                String author = bookData[3].split(": ")[1].trim(); // Pega o valor após "Author: "
+                String publisher = bookData[4].split(": ")[1].trim(); // Pega o valor após "Publisher: "
+                String isbn = bookData[5].split(": ")[1].trim(); // Pega o valor após "ISBN: "
+                
+                // Cria e adiciona o livro à lista de livros do usuário
                 Book book = new Book(title, genre, pages, author, publisher, isbn);
                 user.borrowBook(book);  
             }
         }
+        
         reader.close();
-    }
+    }    
     
     
     public static void main(String[] args) throws Exception {
+        if (libBooks.exists()) {
+            loadLibraryBooks();
+        }
+        
+        if (userBooks.exists()) {
+            loadUserBooks();
+        }
+
         menu();
         sc.close();
         
